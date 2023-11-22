@@ -12,46 +12,83 @@
                 <input class="form-check-input" type="checkbox" role="switch" id="overwriteAgreementSwitch">
                 <label class="form-check-label" for="overwriteAgreementSwitch" id="overwriteAgreementText">[CAUTION] AWS config is overwritten with the value set in this program</label>
             </div>
-            <div class="btn-group btn-group-block">
-                <button type="button" class="btn btn-success btn-split-main">SELECTED PROFILE</button>
-                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Modify</a></li>
-                    <li><a class="dropdown-item" href="#">Delete</a></li>
-                </ul>
-            </div>
-            <div class="btn-group btn-group-block">
-                <button type="button" class="btn btn-outline-primary btn-split-main">SELECTABLE PROFILE</button>
-                <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Modify</a></li>
-                    <li><a class="dropdown-item" href="#">Delete</a></li>
-                </ul>
-            </div>
-            <div class="btn-group btn-group-block">
-                <button type="button" class="btn btn-outline-primary btn-split-main">MFA PROFILE</button>
-                <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">MFA</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Modify</a></li>
-                    <li><a class="dropdown-item" href="#">Delete</a></li>
-                </ul>
+            <div class="profile-button-container">
+                <div class="btn-group btn-group-block">
+                    <button type="button" class="btn btn-success btn-split-main">SELECTED PROFILE</button>
+                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item btn-config-modify" href="#">Modify</a></li>
+                        <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group btn-group-block">
+                    <button type="button" class="btn btn-outline-primary btn-split-main">SELECTABLE PROFILE</button>
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item btn-config-modify" href="#">Modify</a></li>
+                        <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group btn-group-block">
+                    <button type="button" class="btn btn-outline-primary btn-split-main">MFA PROFILE</button>
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item btn-input-mfa" href="#">MFA</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item btn-config-modify" href="#">Modify</a></li>
+                        <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="d-grid gap-2">
                 <button type="button" class="btn btn-outline-secondary">+</button>
             </div>
         </div>
-    </body>
 
-    <script src="../public/lib/jquery/jquery-3.7.1.min.js"></script>
-    <script src="../public/lib/bootstrap/bootstrap.bundle.min.js"></script>
+        <!-- Modal -->
+        <div class="modal fade" id="configModifyModal" tabindex="-1" aria-labelledby="configModifyModalLabel" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="configModifyModalLabel">Modify configuration</h1>
+                        <button type="button" class="btn-close" aria-label="Close" id="btnConfigModifyModalClose"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="inputProfileName" class="form-label">Profile name</label>
+                            <input type="text" class="form-control" id="inputProfileName" placeholder="Profile name (Example : test-dev)" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputRegion" class="form-label">Region</label>
+                            <input type="text" class="form-control" id="inputRegion" placeholder="Region (Example : ap-northeast-1)" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputAccessKeyId" class="form-label">Access key ID</label>
+                            <input type="text" class="form-control" id="inputAccessKeyId" placeholder="Access key ID (Example : ABCDEFGHIJKLMN)" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputAccessKey" class="form-label">Access key</label>
+                            <input type="text" class="form-control" id="inputAccessKey" placeholder="Access key (Example : OPQRSTUVWXYZ)" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btnConfigModifyModalCancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btnSaveConfig">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../public/lib/jquery/jquery-3.7.1.min.js"></script>
+        <script src="../public/lib/bootstrap/bootstrap.bundle.min.js"></script>
+        <script type="module" src="../public/js/index.js"></script>
+    </body>
 </html>
