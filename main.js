@@ -5,8 +5,8 @@ const { ACTIVE_PROFILE } = require("./src/common/const");
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 608,
+        height: 700,
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         }
