@@ -1,0 +1,16 @@
+#overwriteAgreementText {
+    color: red;
+}
+
+.btn-group-block {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.btn-split-main {
+    width: calc(100% - 28px);
+}
+
+.btn-split-dropdown {
+    margin-left: -6px !important;
+}
