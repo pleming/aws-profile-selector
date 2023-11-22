@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
+const { ACTIVE_PROFILE } = require("./src/common/const");
+
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
@@ -9,6 +11,10 @@ const createWindow = () => {
             preload: path.join(__dirname, "preload.js")
         }
     });
+
+    if (process.env.NODE_ENV === ACTIVE_PROFILE.DEV) {
+        win.webContents.openDevTools();
+    }
 
     win.loadFile("./view/index.html");
 
