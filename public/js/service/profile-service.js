@@ -1,3 +1,5 @@
+import Constants from "../common/const.js";
+
 const mfaContextMenuHTML =
     `<div class="div-mfa-context-menu">
         <li><a class="dropdown-item btn-input-mfa" href="#">MFA</a></li>
@@ -30,5 +32,6 @@ const appendProfile = (profileName, isMfaProfile) => {
 };
 
 export default {
+    [Constants.LOCAL_STORAGE.AWS_CONFIG]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_CONFIG)) || {},
     appendProfile
 };
