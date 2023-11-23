@@ -18,5 +18,11 @@ export default {
     "TRIGGER": {
         "NEW_CONFIG": "new_config",
         "MODIFY_CONFIG": "modify_config"
+    },
+    "ELECTRON_DIALOG": {
+        "CONFIRM": {
+            "YES": 0,
+            "NO": 1
+        }
     }
 };
