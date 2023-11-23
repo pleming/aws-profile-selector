@@ -9,11 +9,11 @@
     <body>
         <div class="container-fluid">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="overwriteAgreementSwitch">
-                <label class="form-check-label" for="overwriteAgreementSwitch" id="overwriteAgreementText">[CAUTION] AWS config is overwritten with the value set in this program</label>
+                <input class="form-check-input" type="checkbox" name="switchOverwriteAgreement" role="switch" id="switchOverwriteAgreement">
+                <label class="form-check-label" for="switchOverwriteAgreement" id="labelOverwriteAgreement">[CAUTION] AWS config is overwritten with the value set in this program</label>
             </div>
             <div class="profile-button-container">
-                <div class="btn-group btn-group-block">
+                <div class="btn-group btn-group-block btn-group-profile">
                     <button type="button" class="btn btn-success btn-split-main">SELECTED PROFILE</button>
                     <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="visually-hidden">Toggle Dropdown</span>
@@ -23,7 +23,7 @@
                         <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
                     </ul>
                 </div>
-                <div class="btn-group btn-group-block">
+                <div class="btn-group btn-group-block btn-group-profile">
                     <button type="button" class="btn btn-outline-primary btn-split-main">SELECTABLE PROFILE</button>
                     <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="visually-hidden">Toggle Dropdown</span>
@@ -33,7 +33,7 @@
                         <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
                     </ul>
                 </div>
-                <div class="btn-group btn-group-block">
+                <div class="btn-group btn-group-block btn-group-profile">
                     <button type="button" class="btn btn-outline-primary btn-split-main">MFA PROFILE</button>
                     <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="visually-hidden">Toggle Dropdown</span>

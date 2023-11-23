@@ -7,7 +7,7 @@ const mfaContextMenuHTML =
     </div>`;
 
 const profileButtonHTML =
-    `<div class="btn-group btn-group-block">
+    `<div class="btn-group btn-group-block btn-group-profile">
         <button type="button" class="btn btn-outline-primary btn-split-main"></button>
         <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split btn-split-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="visually-hidden">Toggle Dropdown</span>
