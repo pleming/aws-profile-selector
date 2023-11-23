@@ -52,14 +52,14 @@ const registerEvent = () => {
         const newProfileName = $("input[name=inputProfileName]").val();
 
         if (!newProfileName) {
-            console.log("Profile name is null");
+            window.electronDialog.alert("Profile name is empty");
             return;
         }
 
         const awsConfig = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG];
 
         if (triggeredBy === Constants.TRIGGER.NEW_CONFIG && awsConfig.hasOwnProperty(newProfileName)) {
-            console.log("Already exist profile");
+            window.electronDialog.alert("Duplicated profile name");
             return;
         }
 
@@ -77,7 +77,8 @@ const registerEvent = () => {
 
         for (const key in newConfig) {
             if (!newConfig[key]) {
-                console.log(`${key} is null`);
+                window.electronDialog.alert(`${key} is empty`);
+                console.log();
                 return;
             }
         }
@@ -96,16 +97,25 @@ const registerEvent = () => {
         initialize();
     });
 
-    $("#btnConfigModifyModalCancel").click(() => {
-        console.log("Click btnConfigModifyModalCancel");
-        hide();
+    $("#btnConfigModifyModalCancel").click(async () => {
+        await closeConfigModifyModal();
     });
 
-    $("#btnConfigModifyModalClose").click(() => {
-        console.log("Click btnConfigModifyModalClose");
+    $("#btnConfigModifyModalClose").click(async () => {
+        await closeConfigModifyModal();
         hide();
     });
-}
+};
+
+const closeConfigModifyModal = async () => {
+    const response = await window.electronDialog.confirm("Cancel configuration");
+
+    if (response === Constants.ELECTRON_DIALOG.CONFIRM.NO) {
+        return;
+    }
+
+    hide();
+};
 
 export default {
     initialize,
