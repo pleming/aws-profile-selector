@@ -10,22 +10,22 @@
         <div class="container-fluid">
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" name="switchOverwriteAgreement" role="switch" id="switchOverwriteAgreement">
-                <label class="form-check-label" for="switchOverwriteAgreement" id="labelOverwriteAgreement">[CAUTION] AWS config is overwritten with the value set in this program</label>
+                <label class="form-check-label" for="switchOverwriteAgreement" id="labelOverwriteAgreement">[AGREEMENT] AWS profile is overwritten with the value set in this program</label>
             </div>
 
             <div class="profile-button-container"></div>
             <div class="d-grid gap-2">
-                <button type="button" class="btn btn-outline-secondary" id="btnNewConfig">+</button>
+                <button type="button" class="btn btn-outline-secondary" id="btnNewProfile">+</button>
             </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="configModifyModal" tabindex="-1" aria-labelledby="configModifyModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" id="profileModifyModal" tabindex="-1" aria-labelledby="profileModifyModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="configModifyModalLabel">Modify configuration</h1>
-                        <button type="button" class="btn-close" aria-label="Close" id="btnConfigModifyModalClose"></button>
+                        <h1 class="modal-title fs-5" id="profileModifyModalLabel">Modify profile</h1>
+                        <button type="button" class="btn-close" aria-label="Close" id="btnProfileModifyModalClose"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
@@ -53,8 +53,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="btnConfigModifyModalCancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="btnSaveConfig">Save</button>
+                        <button type="button" class="btn btn-secondary" id="btnProfileModifyModalCancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btnSaveProfile">Save</button>
                     </div>
                 </div>
             </div>

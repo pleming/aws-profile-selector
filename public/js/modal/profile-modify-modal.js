@@ -9,17 +9,17 @@ const initialize = () => {
     $("#switchActivateMfaArn").prop("checked", false);
     $("#inputMfaArn").prop("disabled", true);
 
-    $("#configModifyModal .modal-body input").each((idx, elem) => {
+    $("#profileModifyModal .modal-body input").each((idx, elem) => {
         $(elem).val("");
     });
 };
 
 const show = (eventTarget, profileName, profileData) => {
-    triggeredBy = Constants.TRIGGER.NEW_CONFIG;
+    triggeredBy = Constants.TRIGGER.NEW_PROFILE;
     profileButton = eventTarget;
 
     if (profileName && profileData) {
-        triggeredBy = Constants.TRIGGER.MODIFY_CONFIG;
+        triggeredBy = Constants.TRIGGER.MODIFY_PROFILE;
 
         profile = { profileName, profileData };
 
@@ -31,16 +31,16 @@ const show = (eventTarget, profileName, profileData) => {
         $("#switchActivateMfaArn").prop("checked", profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
         $("#inputMfaArn").prop("disabled", !profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
 
-        $("#configModifyModalLabel").text("Modify config");
+        $("#profileModifyModalLabel").text("Modify profile");
     } else {
-        $("#configModifyModalLabel").text("New config");
+        $("#profileModifyModalLabel").text("New profile");
     }
 
-    $("#configModifyModal").modal("show");
+    $("#profileModifyModal").modal("show");
 };
 
 const hide = () => {
-    $("#configModifyModal").modal("hide");
+    $("#profileModifyModal").modal("hide");
 };
 
 const registerEvent = () => {
@@ -48,7 +48,7 @@ const registerEvent = () => {
         $("#inputMfaArn").prop("disabled", !$(event.target).is(":checked"));
     });
 
-    $("#btnSaveConfig").click(() => {
+    $("#btnSaveProfile").click(() => {
         const newProfileName = $("input[name=inputProfileName]").val();
 
         if (!newProfileName) {
@@ -56,14 +56,14 @@ const registerEvent = () => {
             return;
         }
 
-        const awsConfig = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG];
+        const awsProfile = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE];
 
-        if (triggeredBy === Constants.TRIGGER.NEW_CONFIG && awsConfig.hasOwnProperty(newProfileName)) {
+        if (triggeredBy === Constants.TRIGGER.NEW_PROFILE && awsProfile.hasOwnProperty(newProfileName)) {
             window.electronDialog.alert("Duplicated profile name");
             return;
         }
 
-        const newConfig = {
+        const newProfile = {
             [Constants.AWS_PROPERTY.REGION]: $("input[name=inputRegion]").val(),
             [Constants.AWS_PROPERTY.AWS_ACCESS_KEY_ID]: $("input[name=inputAccessKeyId]").val(),
             [Constants.AWS_PROPERTY.AWS_SECRET_ACCESS_KEY]: $("input[name=inputAccessKey]").val()
@@ -72,43 +72,51 @@ const registerEvent = () => {
         const isMfaProfile = $("#switchActivateMfaArn").is(":checked");
 
         if (isMfaProfile) {
-            newConfig[Constants.AWS_PROPERTY.MFA_ARN] = $("#inputMfaArn").val();
+            newProfile[Constants.AWS_PROPERTY.MFA_ARN] = $("#inputMfaArn").val();
         }
 
-        for (const key in newConfig) {
-            if (!newConfig[key]) {
+        for (const key in newProfile) {
+            if (!newProfile[key]) {
                 window.electronDialog.alert(`${key} is empty`);
                 console.log();
                 return;
             }
         }
 
-        if (triggeredBy === Constants.TRIGGER.NEW_CONFIG) {
+        if (triggeredBy === Constants.TRIGGER.NEW_PROFILE) {
             profileService.appendProfile(newProfileName, isMfaProfile);
-        } else if (triggeredBy === Constants.TRIGGER.MODIFY_CONFIG) {
-            delete awsConfig[profile.profileName];
+        } else if (triggeredBy === Constants.TRIGGER.MODIFY_PROFILE) {
+            delete awsProfile[profile.profileName];
             profileButton.text(newProfileName);
         }
 
-        awsConfig[newProfileName] = newConfig;
-        localStorage.setItem(Constants.LOCAL_STORAGE.AWS_CONFIG, JSON.stringify(awsConfig));
+        awsProfile[newProfileName] = newProfile;
+        localStorage.setItem(Constants.LOCAL_STORAGE.AWS_PROFILE, JSON.stringify(awsProfile));
 
         hide();
         initialize();
     });
 
-    $("#btnConfigModifyModalCancel").click(async () => {
-        await closeConfigModifyModal();
+    $("#btnProfileModifyModalCancel").click(async () => {
+        await closeProfileModifyModal();
     });
 
-    $("#btnConfigModifyModalClose").click(async () => {
-        await closeConfigModifyModal();
+    $("#btnProfileModifyModalClose").click(async () => {
+        await closeProfileModifyModal();
         hide();
     });
 };
 
-const closeConfigModifyModal = async () => {
-    const response = await window.electronDialog.confirm("Cancel configuration");
+const closeProfileModifyModal = async () => {
+    let confirmNotice;
+
+    if (triggeredBy === Constants.TRIGGER.NEW_PROFILE) {
+        confirmNotice = "new profile";
+    } else if (triggeredBy === Constants.TRIGGER.MODIFY_PROFILE) {
+        confirmNotice = "profile modification";
+    }
+
+    const response = await window.electronDialog.confirm(`Cancel ${confirmNotice}`);
 
     if (response === Constants.ELECTRON_DIALOG.CONFIRM.NO) {
         return;
