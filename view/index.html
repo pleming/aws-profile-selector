@@ -60,6 +60,27 @@
             </div>
         </div>
 
+        <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="otpModalLabel">Input OTP</h1>
+                        <button type="button" class="btn-close" aria-label="Close" id="btnOTPModalClose"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="inputOTP" class="form-label">OTP</label>
+                            <input type="text" name="inputOTP" class="form-control" id="inputOTP" placeholder="OTP (Example : 123456)" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btnOTPModalCancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btnConfirmOTP">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="../public/lib/jquery/jquery-3.7.1.min.js"></script>
         <script src="../public/lib/bootstrap/bootstrap.bundle.min.js"></script>
         <script type="module" src="../public/js/index.js"></script>
