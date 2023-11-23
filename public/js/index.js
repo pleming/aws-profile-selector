@@ -1,5 +1,5 @@
 import configModifyModal from "./modal/config-modify-modal.js";
-
+import otpModal from "./modal/otp-modal.js";
 import profileService from "./service/profile-service.js";
 import Constants from "./common/const.js";
 
@@ -26,13 +26,25 @@ const registerEvent = () => {
         })
     });
 
+    $(".profile-button-container").on("click", ".btn-profile", (event) => {
+        const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-profile");
+        const profileName = profileButton.text();
+        const profileData = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG][profileName];
+
+        if (profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN)) {
+            otpModal.show(profileName, profileData);
+        } else {
+            // TBD
+        }
+    });
+
     $("#btnNewConfig").click(() => {
         configModifyModal.initialize();
         configModifyModal.show();
     });
 
     $(".profile-button-container").on("click", ".btn-config-modify", (event) => {
-        const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-split-main");
+        const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-profile");
         const profileName = profileButton.text();
         const profileData = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG][profileName];
 
@@ -42,6 +54,10 @@ const registerEvent = () => {
 
 $(() => {
     initialize();
+    configModifyModal.initialize();
+    otpModal.initialize();
+
     registerEvent();
     configModifyModal.registerEvent();
+    otpModal.registerEvent();
 });
