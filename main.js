@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 const { ACTIVE_PROFILE } = require("./src/common/const");
@@ -28,7 +28,22 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
         }
-    })
+    });
+
+    ipcMain.handle("dialog:confirm", (event, message) => {
+        return dialog.showMessageBoxSync({
+            "type": "question",
+            "buttons": ["Yes", "No"],
+            "message": message
+        });
+    });
+
+    ipcMain.on("dialog:alert", (event, message) => {
+        dialog.showMessageBoxSync({
+            "type": "info",
+            "message": message
+        });
+    });
 });
 
 app.on("window-all-closed", () => {
