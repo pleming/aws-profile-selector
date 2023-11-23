@@ -14,3 +14,13 @@
 .btn-split-dropdown {
     margin-left: -6px !important;
 }
+
+.mfa-switch-container {
+    display: inline-block;
+    padding: 0;
+    width: 70px;
+}
+
+.mfa-switch-container > input {
+    float: right !important;
+}
