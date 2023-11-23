@@ -14,5 +14,9 @@ export default {
     },
     "LOCAL_STORAGE": {
         "AWS_CONFIG": "awsConfig"
+    },
+    "TRIGGER": {
+        "NEW_CONFIG": "new_config",
+        "MODIFY_CONFIG": "modify_config"
     }
 };
