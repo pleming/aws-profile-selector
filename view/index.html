@@ -39,22 +39,24 @@
                         <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item btn-input-mfa" href="#">MFA</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                        <div class="div-mfa-context-menu">
+                            <li><a class="dropdown-item btn-input-mfa" href="#">MFA</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </div>
                         <li><a class="dropdown-item btn-config-modify" href="#">Modify</a></li>
                         <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
                     </ul>
                 </div>
             </div>
             <div class="d-grid gap-2">
-                <button type="button" class="btn btn-outline-secondary">+</button>
+                <button type="button" class="btn btn-outline-secondary" id="btnNewConfig">+</button>
             </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="configModifyModal" tabindex="-1" aria-labelledby="configModifyModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal fade" id="configModifyModal" tabindex="-1" aria-labelledby="configModifyModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -64,19 +66,26 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="inputProfileName" class="form-label">Profile name</label>
-                            <input type="text" class="form-control" id="inputProfileName" placeholder="Profile name (Example : test-dev)" />
+                            <input type="text" name="inputProfileName" class="form-control" id="inputProfileName" placeholder="Profile name (Example : test-dev)" />
                         </div>
                         <div class="mb-3">
                             <label for="inputRegion" class="form-label">Region</label>
-                            <input type="text" class="form-control" id="inputRegion" placeholder="Region (Example : ap-northeast-1)" />
+                            <input type="text" name="inputRegion" class="form-control" id="inputRegion" placeholder="Region (Example : ap-northeast-1)" />
                         </div>
                         <div class="mb-3">
                             <label for="inputAccessKeyId" class="form-label">Access key ID</label>
-                            <input type="text" class="form-control" id="inputAccessKeyId" placeholder="Access key ID (Example : ABCDEFGHIJKLMN)" />
+                            <input type="text" name="inputAccessKeyId" class="form-control" id="inputAccessKeyId" placeholder="Access key ID (Example : ABCDEFGHIJKLMN)" />
                         </div>
                         <div class="mb-3">
                             <label for="inputAccessKey" class="form-label">Access key</label>
-                            <input type="text" class="form-control" id="inputAccessKey" placeholder="Access key (Example : OPQRSTUVWXYZ)" />
+                            <input type="text" name="inputAccessKey" class="form-control" id="inputAccessKey" placeholder="Access key (Example : OPQRSTUVWXYZ)" />
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch mfa-switch-container">
+                                <label class="form-check-label" for="switchActivateMfaArn" id="labelSwitchActivateMfaArn">MFA</label>
+                                <input class="form-check-input" type="checkbox" name="switchActivateMfaArn" role="switch" id="switchActivateMfaArn">
+                            </div>
+                            <input type="text" name="inputMfaArn" class="form-control" id="inputMfaArn" placeholder="MFA ARN (Example : arn:aws:iam:1234567890:mfa/account:" />
                         </div>
                     </div>
                     <div class="modal-footer">
