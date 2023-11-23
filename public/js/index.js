@@ -1,13 +1,10 @@
 import configModifyModal from "./modal/config-modify-modal.js";
 
-import { globalData } from "./common/global-data.js";
 import profileService from "./service/profile-service.js";
 import Constants from "./common/const.js";
 
 const initialize = () => {
-    globalData.initialize();
-
-    const awsConfig = globalData[Constants.LOCAL_STORAGE.AWS_CONFIG];
+    const awsConfig = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG];
 
     for (const key in awsConfig) {
         profileService.appendProfile(key, awsConfig[key].hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
@@ -34,8 +31,12 @@ const registerEvent = () => {
         configModifyModal.show();
     });
 
-    $(".profile-button-container").on("click", ".btn-config-modify", () => {
-        configModifyModal.show();
+    $(".profile-button-container").on("click", ".btn-config-modify", (event) => {
+        const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-split-main");
+        const profileName = profileButton.text();
+        const profileData = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG][profileName];
+
+        configModifyModal.show(profileButton, profileName, profileData);
     });
 }
 
