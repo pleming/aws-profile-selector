@@ -91,7 +91,7 @@ const registerEvent = () => {
         }
 
         awsProfile[newProfileName] = newProfile;
-        localStorage.setItem(Constants.LOCAL_STORAGE.AWS_PROFILE, JSON.stringify(awsProfile));
+        profileService.saveProfile(awsProfile);
 
         hide();
         initialize();
