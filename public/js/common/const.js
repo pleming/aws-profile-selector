@@ -13,11 +13,11 @@ export default {
         "OUTPUT": "output"
     },
     "LOCAL_STORAGE": {
-        "AWS_CONFIG": "awsConfig"
+        "AWS_PROFILE": "awsProfile"
     },
     "TRIGGER": {
-        "NEW_CONFIG": "new_config",
-        "MODIFY_CONFIG": "modify_config"
+        "NEW_PROFILE": "new_profile",
+        "MODIFY_PROFILE": "modify_profile"
     },
     "ELECTRON_DIALOG": {
         "CONFIRM": {

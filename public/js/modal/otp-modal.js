@@ -29,7 +29,7 @@ const registerEvent = () => {
             return;
         }
 
-        console.log("AWS Config :", profile);
+        console.log("AWS profile :", profile);
         console.log("OTP :", otp);
 
         hide();

@@ -7,8 +7,8 @@ const profileButtonHTML =
             <span class="visually-hidden">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item btn-config-modify" href="#">Modify</a></li>
-            <li><a class="dropdown-item btn-config-delete" href="#">Delete</a></li>
+            <li><a class="dropdown-item btn-profile-modify" href="#">Modify</a></li>
+            <li><a class="dropdown-item btn-profile-delete" href="#">Delete</a></li>
         </ul>
     </div>`;
 
@@ -20,6 +20,6 @@ const appendProfile = (profileName) => {
 };
 
 export default {
-    [Constants.LOCAL_STORAGE.AWS_CONFIG]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_CONFIG)) || {},
+    [Constants.LOCAL_STORAGE.AWS_PROFILE]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)) || {},
     appendProfile
 };
