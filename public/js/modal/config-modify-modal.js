@@ -1,6 +1,9 @@
-import { globalData } from "../common/global-data.js";
 import profileService from "../service/profile-service.js";
 import Constants from "../common/const.js";
+
+let profile;
+let profileButton;
+let triggeredBy;
 
 const initialize = () => {
     $("#switchActivateMfaArn").prop("checked", false);
@@ -11,7 +14,28 @@ const initialize = () => {
     });
 };
 
-const show = () => {
+const show = (eventTarget, profileName, profileData) => {
+    triggeredBy = Constants.TRIGGER.NEW_CONFIG;
+    profileButton = eventTarget;
+
+    if (profileName && profileData) {
+        triggeredBy = Constants.TRIGGER.MODIFY_CONFIG;
+
+        profile = { profileName, profileData };
+
+        $("input[name=inputProfileName]").val(profileName);
+        $("input[name=inputRegion]").val(profileData[Constants.AWS_PROPERTY.REGION]);
+        $("input[name=inputAccessKeyId]").val(profileData[Constants.AWS_PROPERTY.AWS_ACCESS_KEY_ID]);
+        $("input[name=inputAccessKey]").val(profileData[Constants.AWS_PROPERTY.AWS_SECRET_ACCESS_KEY]);
+        $("#inputMfaArn").val(profileData[Constants.AWS_PROPERTY.MFA_ARN]);
+        $("#switchActivateMfaArn").prop("checked", profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
+        $("#inputMfaArn").prop("disabled", !profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
+
+        $("#configModifyModalLabel").text("Modify config");
+    } else {
+        $("#configModifyModalLabel").text("New config");
+    }
+
     $("#configModifyModal").modal("show");
 };
 
@@ -25,16 +49,16 @@ const registerEvent = () => {
     });
 
     $("#btnSaveConfig").click(() => {
-        const profileName = $("input[name=inputProfileName]").val();
+        const newProfileName = $("input[name=inputProfileName]").val();
 
-        if (!profileName) {
+        if (!newProfileName) {
             console.log("Profile name is null");
             return;
         }
 
-        const awsConfig = globalData[Constants.LOCAL_STORAGE.AWS_CONFIG];
+        const awsConfig = profileService[Constants.LOCAL_STORAGE.AWS_CONFIG];
 
-        if (awsConfig.hasOwnProperty(profileName)) {
+        if (triggeredBy === Constants.TRIGGER.NEW_CONFIG && awsConfig.hasOwnProperty(newProfileName)) {
             console.log("Already exist profile");
             return;
         }
@@ -58,10 +82,15 @@ const registerEvent = () => {
             }
         }
 
-        awsConfig[profileName] = newConfig;
+        if (triggeredBy === Constants.TRIGGER.NEW_CONFIG) {
+            profileService.appendProfile(newProfileName, isMfaProfile);
+        } else if (triggeredBy === Constants.TRIGGER.MODIFY_CONFIG) {
+            delete awsConfig[profile.profileName];
+            profileButton.text(newProfileName);
+        }
 
+        awsConfig[newProfileName] = newConfig;
         localStorage.setItem(Constants.LOCAL_STORAGE.AWS_CONFIG, JSON.stringify(awsConfig));
-        profileService.appendProfile(profileName, isMfaProfile);
 
         hide();
         initialize();
