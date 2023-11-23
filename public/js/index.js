@@ -50,7 +50,22 @@ const registerEvent = () => {
 
         profileModifyModal.show(profileButton, profileName, profileData);
     });
-}
+
+    $(".profile-button-container").on("click", ".btn-profile-delete", async (event) => {
+        const profileButtonGroup = $(event.target).closest(".btn-group-profile");
+        const profileName = profileButtonGroup.children(".btn-profile").text();
+        const response = await window.electronDialog.confirm(`Remove profile : ${profileName}`);
+
+        if (response === Constants.ELECTRON_DIALOG.CONFIRM.NO) {
+            return;
+        }
+
+        delete profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
+        profileService.saveProfile(profileService[Constants.LOCAL_STORAGE.AWS_PROFILE]);
+
+        profileButtonGroup.remove();
+    });
+};
 
 $(() => {
     initialize();

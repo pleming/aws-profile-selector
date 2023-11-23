@@ -19,7 +19,12 @@ const appendProfile = (profileName) => {
     $(".profile-button-container").append(profileButton);
 };
 
+const saveProfile = (awsProfile) => {
+    localStorage.setItem(Constants.LOCAL_STORAGE.AWS_PROFILE, JSON.stringify(awsProfile));
+};
+
 export default {
     [Constants.LOCAL_STORAGE.AWS_PROFILE]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)) || {},
-    appendProfile
+    appendProfile,
+    saveProfile
 };
