@@ -21,11 +21,7 @@ const hide = () => {
 
 const registerEvent = () => {
     $("#switchActivateMfaArn").click((event) => {
-        if ($(event.target).is(":checked")) {
-            $("#inputMfaArn").prop("disabled", false);
-        } else {
-            $("#inputMfaArn").prop("disabled", true);
-        }
+        $("#inputMfaArn").prop("disabled", !$(event.target).is(":checked"));
     });
 
     $("#btnSaveConfig").click(() => {
