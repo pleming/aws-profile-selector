@@ -5,6 +5,7 @@ const path = require("path");
 const homedir = require("os").homedir();
 const { exec } = require("child_process");
 
+const LoadingIndicator = require("./src/service/loading-indicator");
 const { ACTIVE_PROFILE } = require("./src/common/const");
 
 const createWindow = () => {
@@ -31,12 +32,41 @@ const writeProfile = (profile) => {
 
     const defaultCredentials = `[default]\naws_access_key_id = ${profile["aws_access_key_id"]}\naws_secret_access_key = ${profile["aws_secret_access_key"]}`;
     fs.writeFileSync(`${homedir}/.aws/credentials`, defaultCredentials);
+
+    return {
+        "status": true,
+        "message": "AWS profile setup completed"
+    };
 };
 
 const writeSessionToken = (session) => {
     const credentials = JSON.parse(session).Credentials;
     const newCredentials = `[default]\naws_access_key_id = ${credentials.AccessKeyId}\naws_secret_access_key = ${credentials.SecretAccessKey}\naws_session_token = ${credentials.SessionToken}`;
     fs.writeFileSync(`${homedir}/.aws/credentials`, newCredentials);
+};
+
+const setupMFAProfile = async (profile) => {
+    const profileData = profile.profileData;
+
+    writeProfile(profileData);
+
+    const response = await new Promise((resolve, reject) => {
+        exec(`aws sts get-session-token --serial-number ${profileData["mfa_arn"]} --token-code ${profile.otp} --profile default`, (error, stdout, stderr) => {
+            if (error) {
+                reject(stderr);
+                return;
+            }
+
+            resolve(stdout);
+        });
+    });
+
+    writeSessionToken(response);
+
+    return {
+        "status": true,
+        "message": "AWS profile setup completed"
+    };
 };
 
 app.whenReady().then(() => {
@@ -50,14 +80,10 @@ app.whenReady().then(() => {
 
     ipcMain.handle("profile:setupProfile", async (event, message) => {
         const { profile } = message;
+        const loadingIndicator = new LoadingIndicator(win, writeProfile, profile);
 
         try {
-            writeProfile(profile);
-
-            return {
-                "status": true,
-                "message": "AWS profile setup completed"
-            };
+            return await loadingIndicator.invoke();
         } catch (error) {
             return {
                 "status": false,
@@ -67,28 +93,14 @@ app.whenReady().then(() => {
     });
 
     ipcMain.handle("profile:setupMFAProfile", async (event, message) => {
-        const { profile, otp } = message;
+        const profile = {
+            "profileData": message.profile,
+            "otp": message.otp
+        };
 
         try {
-            writeProfile(profile);
-
-            const response = await new Promise((resolve, reject) => {
-                exec(`aws sts get-session-token --serial-number ${profile["mfa_arn"]} --token-code ${otp} --profile default`, (error, stdout, stderr) => {
-                    if (error) {
-                        reject(stderr);
-                        return;
-                    }
-
-                    resolve(stdout);
-                });
-            });
-
-            writeSessionToken(response);
-
-            return {
-                "status": true,
-                "message": "AWS profile setup completed"
-            };
+            const loadingIndicator = new LoadingIndicator(win, setupMFAProfile, profile);
+            return await loadingIndicator.invoke();
         } catch (error) {
             return {
                 "status": false,

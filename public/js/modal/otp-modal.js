@@ -1,5 +1,6 @@
 import Constants from "../common/const.js";
 import profileService from "../service/profile-service.js";
+import loadingIndicator from "../service/loading-indicator.js";
 
 let profileButton;
 let profile;
@@ -11,6 +12,8 @@ const initialize = () => {
 };
 
 const show = (eventTarget, profileName, profileData) => {
+    initialize();
+
     profileButton = eventTarget;
 
     if (profileName && profileData) {
@@ -33,10 +36,12 @@ const registerEvent = () => {
             return;
         }
 
+        await loadingIndicator.loading(`Apply AWS profile : ${profile.profileName}`);
         const response = await window.electronProfile.setupMFAProfile(profile, otp);
 
         if (!response.status) {
             window.electronDialog.alert(response.message);
+            profileService.releaseProfile();
             return;
         }
 
@@ -55,6 +60,10 @@ const registerEvent = () => {
     $("#btnOTPModalClose").click(async () => {
         await closeOTPModal();
     });
+
+    $("#otpModal").on("shown.bs.modal", () => {
+        $("#inputOTP").focus();
+    });
 };
 
 const closeOTPModal = async () => {
@@ -65,6 +74,7 @@ const closeOTPModal = async () => {
     }
 
     hide();
+    initialize();
 };
 
 export default {

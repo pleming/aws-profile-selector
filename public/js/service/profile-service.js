@@ -37,9 +37,19 @@ const selectProfile = (profileButton) => {
     });
 };
 
+const releaseProfile = () => {
+    $(".btn-group-profile").each((idx, groupElem) => {
+        $(groupElem).find("button").each((idx, buttonElem) => {
+            $(buttonElem).removeClass("btn-success");
+            $(buttonElem).addClass("btn-outline-primary");
+        });
+    });
+};
+
 export default {
     [Constants.LOCAL_STORAGE.AWS_PROFILE]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)) || {},
     appendProfile,
     saveProfile,
-    selectProfile
+    selectProfile,
+    releaseProfile
 };

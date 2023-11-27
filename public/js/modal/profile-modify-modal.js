@@ -105,6 +105,10 @@ const registerEvent = () => {
         await closeProfileModifyModal();
         hide();
     });
+
+    $("#profileModifyModal").on("shown.bs.modal", () => {
+        $("#inputProfileName").focus();
+    });
 };
 
 const closeProfileModifyModal = async () => {
@@ -123,6 +127,7 @@ const closeProfileModifyModal = async () => {
     }
 
     hide();
+    initialize();
 };
 
 export default {
