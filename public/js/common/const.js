@@ -13,6 +13,7 @@ export default {
         "OUTPUT": "output"
     },
     "LOCAL_STORAGE": {
+        "SELECTED_PROFILE": "selectedProfile",
         "AWS_PROFILE": "awsProfile"
     },
     "TRIGGER": {

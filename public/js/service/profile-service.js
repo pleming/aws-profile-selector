@@ -38,6 +38,8 @@ const selectProfile = (profileButton) => {
 };
 
 const releaseProfile = () => {
+    localStorage.removeItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE);
+
     $(".btn-group-profile").each((idx, groupElem) => {
         $(groupElem).find("button").each((idx, buttonElem) => {
             $(buttonElem).removeClass("btn-success");
