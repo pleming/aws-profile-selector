@@ -26,3 +26,14 @@ contextBridge.exposeInMainWorld("electronDialog", {
         ipcRenderer.send("dialog:alert", message);
     }
 });
+
+contextBridge.exposeInMainWorld("electronLoading", {
+    "indicator": (callback) => {
+        ipcRenderer.on("loading:indicate", (event, message) => {
+            callback(message);
+        });
+    },
+    "removeIndicator": () => {
+        ipcRenderer.removeAllListeners("loading:indicate");
+    }
+});

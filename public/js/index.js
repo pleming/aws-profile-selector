@@ -1,6 +1,7 @@
 import profileModifyModal from "./modal/profile-modify-modal.js";
 import otpModal from "./modal/otp-modal.js";
 import profileService from "./service/profile-service.js";
+import loadingIndicator from "./service/loading-indicator.js";
 import Constants from "./common/const.js";
 
 const initialize = () => {
@@ -15,6 +16,8 @@ const initialize = () => {
     $(".btn-group-profile button").each((idx, elem) => {
         $(elem).attr("disabled", true);
     });
+
+    $(".loading-container").hide();
 };
 
 const registerEvent = () => {
@@ -34,14 +37,23 @@ const registerEvent = () => {
         if (profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN)) {
             otpModal.show(profileButton, profileName, profileData);
         } else {
-            const response = await window.electronProfile.setupProfile({ profileName, profileData });
+            const response = await window.electronDialog.confirm(`Setup profile : ${profileName}`);
 
-            if (!response.status) {
-                window.electronDialog.alert(response.message);
+            if (response === Constants.ELECTRON_DIALOG.CONFIRM.NO) {
                 return;
             }
 
-            window.electronDialog.alert(response.message);
+            loadingIndicator.loading(`Apply AWS profile : ${profileName}`);
+
+            const setupProfileResponse = await window.electronProfile.setupProfile({ profileName, profileData });
+
+            if (!setupProfileResponse.status) {
+                window.electronDialog.alert(setupProfileResponse.message);
+                profileService.releaseProfile();
+                return;
+            }
+
+            window.electronDialog.alert(setupProfileResponse.message);
 
             profileService.selectProfile(profileButton);
         }
