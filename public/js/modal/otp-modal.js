@@ -1,5 +1,7 @@
 import Constants from "../common/const.js";
+import profileService from "../service/profile-service.js";
 
+let profileButton;
 let profile;
 
 const initialize = () => {
@@ -8,7 +10,9 @@ const initialize = () => {
     });
 };
 
-const show = (profileName, profileData) => {
+const show = (eventTarget, profileName, profileData) => {
+    profileButton = eventTarget;
+
     if (profileName && profileData) {
         profile = { profileName, profileData };
     }
@@ -21,7 +25,7 @@ const hide = () => {
 };
 
 const registerEvent = () => {
-    $("#btnConfirmOTP").click(() => {
+    $("#btnConfirmOTP").click(async () => {
         const otp = $("input[name=inputOTP]").val();
 
         if (!otp) {
@@ -29,8 +33,16 @@ const registerEvent = () => {
             return;
         }
 
-        console.log("AWS profile :", profile);
-        console.log("OTP :", otp);
+        const response = await window.electronProfile.setupMFAProfile(profile, otp);
+
+        if (!response.status) {
+            window.electronDialog.alert(response.message);
+            return;
+        }
+
+        window.electronDialog.alert(response.message);
+
+        profileService.selectProfile(profileButton);
 
         hide();
         initialize();

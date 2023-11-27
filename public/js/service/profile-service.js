@@ -23,8 +23,23 @@ const saveProfile = (awsProfile) => {
     localStorage.setItem(Constants.LOCAL_STORAGE.AWS_PROFILE, JSON.stringify(awsProfile));
 };
 
+const selectProfile = (profileButton) => {
+    $(".btn-group-profile").each((idx, groupElem) => {
+        $(groupElem).find("button").each((idx, buttonElem) => {
+            $(buttonElem).removeClass("btn-success");
+            $(buttonElem).addClass("btn-outline-primary");
+        });
+    });
+
+    profileButton.parent(".btn-group-profile").find("button").each((idx, elem) => {
+        $(elem).removeClass("btn-outline-primary");
+        $(elem).addClass("btn-success");
+    });
+};
+
 export default {
     [Constants.LOCAL_STORAGE.AWS_PROFILE]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)) || {},
     appendProfile,
-    saveProfile
+    saveProfile,
+    selectProfile
 };
