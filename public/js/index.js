@@ -26,15 +26,24 @@ const registerEvent = () => {
         })
     });
 
-    $(".profile-button-container").on("click", ".btn-profile", (event) => {
+    $(".profile-button-container").on("click", ".btn-profile", async (event) => {
         const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-profile");
         const profileName = profileButton.text();
         const profileData = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
 
         if (profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN)) {
-            otpModal.show(profileName, profileData);
+            otpModal.show(profileButton, profileName, profileData);
         } else {
-            // TBD
+            const response = await window.electronProfile.setupProfile({ profileName, profileData });
+
+            if (!response.status) {
+                window.electronDialog.alert(response.message);
+                return;
+            }
+
+            window.electronDialog.alert(response.message);
+
+            profileService.selectProfile(profileButton);
         }
     });
 
