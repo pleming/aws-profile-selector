@@ -25,6 +25,11 @@
     float: right !important;
 }
 
+#deleteProfileName {
+    font-style: italic;
+    color: red;
+}
+
 .loading-container {
     position: fixed;
     z-index: 9999;

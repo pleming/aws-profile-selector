@@ -81,6 +81,28 @@
             </div>
         </div>
 
+        <div class="modal fade" id="profileDeleteModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="profileDeleteModalLabel">Confirm delete profile</h1>
+                        <button type="button" class="btn-close" aria-label="Close" id="profileDeleteModalClose"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <p>[CAUTION] If you delete the profile, it cannot be recovered. It is recommended to take measures such as saving configuration before deletion.</p>
+                            <p>Please enter the profile name <span id="deleteProfileName"></span> to delete.</p>
+                            <input type="text" name="inputDeleteProfileConfirmText" class="form-control" id="inputDeleteProfileConfirmText" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btnCancelDeleteProfile">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="btnConfirmDeleteProfile">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Indicator -->
         <div class="loading-container">
             <div class="spinner-border text-light" role="status" id="loadingIndicatorSpinner">

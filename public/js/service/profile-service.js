@@ -48,10 +48,16 @@ const releaseProfile = () => {
     });
 };
 
+const isSelectedProfile = (profileName) => {
+    const selectedProfile = localStorage.getItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE);
+    return selectedProfile === profileName;
+};
+
 export default {
     [Constants.LOCAL_STORAGE.AWS_PROFILE]: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)) || {},
     appendProfile,
     saveProfile,
     selectProfile,
-    releaseProfile
+    releaseProfile,
+    isSelectedProfile
 };
