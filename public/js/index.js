@@ -1,4 +1,5 @@
 import profileModifyModal from "./modal/profile-modify-modal.js";
+import profileDeleteModal from "./modal/profile-delete-modal.js";
 import otpModal from "./modal/otp-modal.js";
 import profileService from "./service/profile-service.js";
 import loadingIndicator from "./service/loading-indicator.js";
@@ -81,34 +82,23 @@ const registerEvent = () => {
 
     $(".profile-button-container").on("click", ".btn-profile-modify", (event) => {
         const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-profile");
-        const profileName = profileButton.text();
-        const profileData = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
-
-        profileModifyModal.show(profileButton, profileName, profileData);
+        profileModifyModal.show(profileButton);
     });
 
     $(".profile-button-container").on("click", ".btn-profile-delete", async (event) => {
         const profileButtonGroup = $(event.target).closest(".btn-group-profile");
-        const profileName = profileButtonGroup.children(".btn-profile").text();
-        const response = await window.electronDialog.confirm(`Remove profile : ${profileName}`);
-
-        if (response === Constants.ELECTRON_DIALOG.CONFIRM.NO) {
-            return;
-        }
-
-        delete profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
-        profileService.saveProfile(profileService[Constants.LOCAL_STORAGE.AWS_PROFILE]);
-
-        profileButtonGroup.remove();
+        profileDeleteModal.show(profileButtonGroup);
     });
 };
 
 $(() => {
     initialize();
     profileModifyModal.initialize();
+    profileDeleteModal.initialize();
     otpModal.initialize();
 
     registerEvent();
     profileModifyModal.registerEvent();
+    profileDeleteModal.registerEvent();
     otpModal.registerEvent();
 });

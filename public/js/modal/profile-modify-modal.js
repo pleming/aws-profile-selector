@@ -14,12 +14,15 @@ const initialize = () => {
     });
 };
 
-const show = (eventTarget, profileName, profileData) => {
+const show = (eventTarget) => {
     triggeredBy = Constants.TRIGGER.NEW_PROFILE;
-    profileButton = eventTarget;
 
-    if (profileName && profileData) {
+    if (eventTarget) {
+        const profileName = eventTarget.text();
+        const profileData = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
+
         triggeredBy = Constants.TRIGGER.MODIFY_PROFILE;
+        profileButton = eventTarget;
 
         profile = { profileName, profileData };
 
