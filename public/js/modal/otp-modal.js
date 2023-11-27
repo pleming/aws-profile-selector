@@ -27,30 +27,34 @@ const hide = () => {
     $("#otpModal").modal("hide");
 };
 
+const confirmOTP = async () => {
+    const otp = $("input[name=inputOTP]").val();
+
+    if (!otp) {
+        window.electronDialog.alert("OTP is empty");
+        return;
+    }
+
+    await loadingIndicator.loading(`Apply AWS profile : ${profile.profileName}`);
+    const response = await window.electronProfile.setupMFAProfile(profile, otp);
+
+    if (!response.status) {
+        window.electronDialog.alert(response.message);
+        profileService.releaseProfile();
+        return;
+    }
+
+    window.electronDialog.alert(response.message);
+
+    profileService.selectProfile(profileButton);
+
+    hide();
+    initialize();
+};
+
 const registerEvent = () => {
     $("#btnConfirmOTP").click(async () => {
-        const otp = $("input[name=inputOTP]").val();
-
-        if (!otp) {
-            window.electronDialog.alert("OTP is empty");
-            return;
-        }
-
-        await loadingIndicator.loading(`Apply AWS profile : ${profile.profileName}`);
-        const response = await window.electronProfile.setupMFAProfile(profile, otp);
-
-        if (!response.status) {
-            window.electronDialog.alert(response.message);
-            profileService.releaseProfile();
-            return;
-        }
-
-        window.electronDialog.alert(response.message);
-
-        profileService.selectProfile(profileButton);
-
-        hide();
-        initialize();
+        await confirmOTP();
     });
 
     $("#btnOTPModalCancel").click(async () => {
@@ -59,6 +63,12 @@ const registerEvent = () => {
 
     $("#btnOTPModalClose").click(async () => {
         await closeOTPModal();
+    });
+
+    $("#inputOTP").on("keypress", async (event) => {
+        if (event.keyCode === 13) {
+            await confirmOTP();
+        }
     });
 
     $("#otpModal").on("shown.bs.modal", () => {
