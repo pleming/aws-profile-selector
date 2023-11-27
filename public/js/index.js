@@ -17,6 +17,19 @@ const initialize = () => {
         $(elem).attr("disabled", true);
     });
 
+    const selectedProfileName = localStorage.getItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE);
+
+    if (selectedProfileName) {
+        $(".btn-profile").each((idx, elem) => {
+            const profileButton = $(elem);
+
+            if (selectedProfileName === profileButton.text()) {
+                profileService.selectProfile(profileButton);
+                return false;
+            }
+        });
+    }
+
     $(".loading-container").hide();
 };
 
@@ -33,6 +46,8 @@ const registerEvent = () => {
         const profileButton = $(event.target).closest(".btn-group-profile").children(".btn-profile");
         const profileName = profileButton.text();
         const profileData = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
+
+        localStorage.setItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE, profileButton.text());
 
         if (profileData.hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN)) {
             otpModal.show(profileButton, profileName, profileData);
