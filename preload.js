@@ -7,8 +7,16 @@ contextBridge.exposeInMainWorld("electronProfile", {
     "setupMFAProfile": async (profile, otp) => {
         return await ipcRenderer.invoke("profile:setupMFAProfile", { profile, otp });
     },
+    "saveConfiguration": async (apscFilePath, configuration) => {
+        return await ipcRenderer.invoke("profile:saveConfiguration", { apscFilePath, configuration });
+    },
     "listenLoadProfile": async (callback) => {
         ipcRenderer.on("profile:loadProfile", (event, message) => {
+            callback(message);
+        });
+    },
+    "listenRequestSaveConfiguration": async (callback) => {
+        ipcRenderer.on("profile:requestSaveConfiguration", async (event, message) => {
             callback(message);
         });
     }

@@ -110,6 +110,17 @@ const listenIPCMessage = () => {
         localStorage.removeItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE);
         initialize();
     });
+
+    window.electronProfile.listenRequestSaveConfiguration(async (message) => {
+        const response = await window.electronProfile.saveConfiguration(message.apscFilePath, JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.AWS_PROFILE)));
+
+        if (!response.status) {
+            window.electronDialog.error(response.message);
+            return;
+        }
+
+        window.electronDialog.info(response.message);
+    });
 };
 
 $(() => {

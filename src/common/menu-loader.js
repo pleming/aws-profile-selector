@@ -61,7 +61,23 @@ class MenuLoader {
                     },
                     {
                         "label": "Save As",
-                        "accelerator": "CmdOrCtrl+S"
+                        "accelerator": "CmdOrCtrl+S",
+                        "click": () => {
+                            const apscFilePath = dialog.showSaveDialogSync({
+                                "filters": [
+                                    {
+                                        "name": "AWS profile selector configuration file (*.apsc)",
+                                        "extensions": ["apsc"]
+                                    }
+                                ]
+                            });
+
+                            if (!apscFilePath) {
+                                return;
+                            }
+
+                            this.#browserWindow.webContents.send("profile:requestSaveConfiguration", { apscFilePath });
+                        }
                     }
                 ]
             },
