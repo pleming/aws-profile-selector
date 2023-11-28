@@ -56,14 +56,14 @@ const saveProfile = async () => {
     const newProfileName = $("input[name=inputProfileName]").val();
 
     if (!newProfileName) {
-        window.electronDialog.alert("Profile name is empty");
+        window.electronDialog.error("Profile name is empty");
         return;
     }
 
     const awsProfile = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE];
 
     if (triggeredBy === Constants.TRIGGER.NEW_PROFILE && awsProfile.hasOwnProperty(newProfileName)) {
-        window.electronDialog.alert("Duplicated profile name");
+        window.electronDialog.error("Duplicated profile name");
         return;
     }
 
@@ -81,14 +81,14 @@ const saveProfile = async () => {
 
     for (const key in newProfile) {
         if (!newProfile[key]) {
-            window.electronDialog.alert(`${key} is empty`);
+            window.electronDialog.error(`${key} is empty`);
             console.log();
             return;
         }
     }
 
     if (triggeredBy === Constants.TRIGGER.NEW_PROFILE) {
-        profileService.appendProfile(newProfileName, isMfaProfile);
+        profileService.appendProfile(newProfileName);
     } else if (triggeredBy === Constants.TRIGGER.MODIFY_PROFILE) {
         delete awsProfile[profile.profileName];
         profileButton.text(newProfileName);
