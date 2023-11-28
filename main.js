@@ -122,6 +122,33 @@ app.whenReady().then(() => {
         }
     });
 
+    ipcMain.handle("profile:saveConfiguration", async (event, message) => {
+        const { apscFilePath, configuration } = message;
+
+        win.webContents.send("loading:start", {
+            "title": "Save configuration",
+            "body": "Loading..."
+        });
+
+        try {
+            fs.writeFileSync(apscFilePath, JSON.stringify(configuration, null, 4));
+
+            return {
+                "status": true,
+                "message": "Configuration save completed"
+            };
+        } catch (error) {
+            return {
+                "status": false,
+                "message": error
+            };
+        } finally {
+            win.webContents.send("loading:end", {
+                "message": "Configuration save completed"
+            });
+        }
+    });
+
     ipcMain.handle("dialog:confirm", (event, message) => {
         return dialog.showMessageBoxSync({
             "type": "question",
