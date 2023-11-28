@@ -9,8 +9,8 @@
     <body>
         <div class="container-fluid">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" name="switchOverwriteAgreement" role="switch" id="switchOverwriteAgreement">
-                <label class="form-check-label" for="switchOverwriteAgreement" id="labelOverwriteAgreement">[AGREEMENT] AWS profile is overwritten with the value set in this program</label>
+                <input class="form-check-input" type="checkbox" name="switchOverwritePolicy" role="switch" id="switchOverwritePolicy">
+                <label class="form-check-label" for="switchOverwritePolicy" id="labelOverwritePolicy">[AGREEMENT] AWS profile is overwritten with the value set in this program</label>
             </div>
 
             <div class="profile-button-container"></div>
@@ -49,7 +49,7 @@
                                 <label class="form-check-label" for="switchActivateMfaArn" id="labelSwitchActivateMfaArn">MFA</label>
                                 <input class="form-check-input" type="checkbox" name="switchActivateMfaArn" role="switch" id="switchActivateMfaArn">
                             </div>
-                            <input type="text" name="inputMfaArn" class="form-control input-profile-modify" id="inputMfaArn" placeholder="MFA ARN (Example : arn:aws:iam:1234567890:mfa/account:" />
+                            <input type="text" name="inputMfaArn" class="form-control input-profile-modify" id="inputMfaArn" placeholder="MFA ARN (Example : arn:aws:iam::1234567890:mfa/account)" />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="profileDeleteModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" id="profileDeleteModal" tabindex="-1" aria-labelledby="profileDeleteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -90,7 +90,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <p>[CAUTION] If you delete the profile, it cannot be recovered. It is recommended to take measures such as saving configuration before deletion.</p>
+                            <p><span class="txt-caution">[CAUTION]</span> If you delete the profile, it cannot be recovered. It is recommended to take measures such as saving configuration before deletion.</p>
                             <p>Please enter the profile name <span id="deleteProfileName"></span> to delete.</p>
                             <input type="text" name="inputDeleteProfileConfirmText" class="form-control" id="inputDeleteProfileConfirmText" />
                         </div>
