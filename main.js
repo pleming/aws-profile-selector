@@ -1,11 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
 
 const fs = require("fs");
 const path = require("path");
 const homedir = require("os").homedir();
 const { exec } = require("child_process");
 
-const LoadingIndicator = require("./src/service/loading-indicator");
+const MenuLoader = require("./src/common/menu-loader");
 const { ACTIVE_PROFILE } = require("./src/common/const");
 
 const createWindow = () => {
@@ -32,11 +32,6 @@ const writeProfile = (profile) => {
 
     const defaultCredentials = `[default]\naws_access_key_id = ${profile["aws_access_key_id"]}\naws_secret_access_key = ${profile["aws_secret_access_key"]}`;
     fs.writeFileSync(`${homedir}/.aws/credentials`, defaultCredentials);
-
-    return {
-        "status": true,
-        "message": "AWS profile setup completed"
-    };
 };
 
 const writeSessionToken = (session) => {
@@ -45,13 +40,11 @@ const writeSessionToken = (session) => {
     fs.writeFileSync(`${homedir}/.aws/credentials`, newCredentials);
 };
 
-const setupMFAProfile = async (profile) => {
-    const profileData = profile.profileData;
-
-    writeProfile(profileData);
+const setupMFAProfile = async (profile, otp) => {
+    writeProfile(profile);
 
     const response = await new Promise((resolve, reject) => {
-        exec(`aws sts get-session-token --serial-number ${profileData["mfa_arn"]} --token-code ${profile.otp} --profile default`, (error, stdout, stderr) => {
+        exec(`aws sts get-session-token --serial-number ${profile["mfa_arn"]} --token-code ${otp} --profile default`, (error, stdout, stderr) => {
             if (error) {
                 reject(stderr);
                 return;
@@ -62,15 +55,12 @@ const setupMFAProfile = async (profile) => {
     });
 
     writeSessionToken(response);
-
-    return {
-        "status": true,
-        "message": "AWS profile setup completed"
-    };
 };
 
 app.whenReady().then(() => {
     const win = createWindow();
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(new MenuLoader(win).load()));
 
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) {
@@ -80,32 +70,55 @@ app.whenReady().then(() => {
 
     ipcMain.handle("profile:setupProfile", async (event, message) => {
         const { profile } = message;
-        const loadingIndicator = new LoadingIndicator(win, writeProfile, profile);
+
+        win.webContents.send("loading:start", {
+            "title": `Apply AWS profile : ${profile.profileName}`,
+            "body": "Loading..."
+        });
 
         try {
-            return await loadingIndicator.invoke();
+            writeProfile(profile.profileData);
+
+            return {
+                "status": true,
+                "message": "AWS profile setup completed"
+            };
         } catch (error) {
             return {
                 "status": false,
                 "message": error.message
             };
+        } finally {
+            win.webContents.send("loading:end", {
+                "message": "AWS profile setup completed"
+            });
         }
     });
 
     ipcMain.handle("profile:setupMFAProfile", async (event, message) => {
-        const profile = {
-            "profileData": message.profile,
-            "otp": message.otp
-        };
+        const { profile, otp } = message;
+
+        win.webContents.send("loading:start", {
+            "title": `Apply AWS profile : ${profile.profileName}`,
+            "body": "Loading..."
+        });
 
         try {
-            const loadingIndicator = new LoadingIndicator(win, setupMFAProfile, profile);
-            return await loadingIndicator.invoke();
+            await setupMFAProfile(profile.profileData, otp);
+
+            return {
+                "status": true,
+                "message": "AWS profile setup completed"
+            };
         } catch (error) {
             return {
                 "status": false,
                 "message": error.message
             };
+        } finally {
+            win.webContents.send("loading:end", {
+                "message": "AWS profile setup completed"
+            });
         }
     });
 
@@ -117,9 +130,23 @@ app.whenReady().then(() => {
         });
     });
 
-    ipcMain.on("dialog:alert", (event, message) => {
+    ipcMain.on("dialog:alert:info", (event, message) => {
         dialog.showMessageBoxSync({
             "type": "info",
+            "message": message
+        });
+    });
+
+    ipcMain.on("dialog:alert:warning", (event, message) => {
+        dialog.showMessageBoxSync({
+            "type": "warn",
+            "message": message
+        });
+    });
+
+    ipcMain.on("dialog:alert:error", (event, message) => {
+        dialog.showMessageBoxSync({
+            "type": "error",
             "message": message
         });
     });

@@ -5,6 +5,11 @@ const ACTIVE_PROFILE = {
     "PRD": "prd"
 };
 
+const ENCODING = {
+    "UTF_8": "utf-8"
+};
+
 exports = module.exports = {
-    ACTIVE_PROFILE
+    ACTIVE_PROFILE,
+    ENCODING
 };
