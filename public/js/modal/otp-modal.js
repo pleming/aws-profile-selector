@@ -1,6 +1,5 @@
 import Constants from "../common/const.js";
 import profileService from "../service/profile-service.js";
-import loadingIndicator from "../service/loading-indicator.js";
 
 let profileButton;
 let profile;
@@ -31,20 +30,24 @@ const confirmOTP = async () => {
     const otp = $("input[name=inputOTP]").val();
 
     if (!otp) {
-        window.electronDialog.alert("OTP is empty");
+        window.electronDialog.error("OTP is empty");
         return;
     }
 
-    await loadingIndicator.loading(`Apply AWS profile : ${profile.profileName}`);
     const response = await window.electronProfile.setupMFAProfile(profile, otp);
 
     if (!response.status) {
-        window.electronDialog.alert(response.message);
+        window.electronDialog.error(response.message);
+
+        const inputOTPElem = $("input[name=inputOTP]");
+        inputOTPElem.val("");
+        inputOTPElem.focus();
+
         profileService.releaseProfile();
         return;
     }
 
-    window.electronDialog.alert(response.message);
+    window.electronDialog.info(response.message);
 
     profileService.selectProfile(profileButton);
 
