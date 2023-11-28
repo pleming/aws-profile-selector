@@ -14,7 +14,8 @@ export default {
     },
     "LOCAL_STORAGE": {
         "SELECTED_PROFILE": "selectedProfile",
-        "AWS_PROFILE": "awsProfile"
+        "AWS_PROFILE": "awsProfile",
+        "MFA_EXPIRE_TIME": "mfaExpireTime"
     },
     "TRIGGER": {
         "NEW_PROFILE": "new_profile",

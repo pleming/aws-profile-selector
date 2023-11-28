@@ -1,8 +1,7 @@
 import profileService from "../service/profile-service.js";
 import Constants from "../common/const.js";
 
-let profileButtonGroup;
-let profileName;
+let triggerProfileId;
 
 const initialize = () => {
     const confirmTextElem = $("#inputDeleteProfileConfirmText");
@@ -13,9 +12,10 @@ const initialize = () => {
     $("#deleteProfileName").text("");
 };
 
-const show = (eventTarget) => {
-    profileButtonGroup = eventTarget.closest(".btn-group-profile");
-    profileName = profileButtonGroup.children(".btn-profile").text();
+const show = (profileId) => {
+    const { profileName } = profileService.loadProfile(profileId);
+
+    triggerProfileId = profileId;
 
     $("#deleteProfileName").text(profileName);
     $("#inputDeleteProfileConfirmText").attr("placeholder", profileName);
@@ -34,19 +34,19 @@ const deleteProfile = async () => {
         return;
     }
 
+    const { profileName } = profileService.loadProfile(triggerProfileId);
+
     if (profileName !== $("#inputDeleteProfileConfirmText").val()) {
         window.electronDialog.error("Profile name is mismatch");
         return;
     }
 
-    if (profileService.isSelectedProfile(profileName)) {
+    if (profileService.isSelectedProfile(triggerProfileId)) {
         profileService.releaseProfile();
     }
 
-    delete profileService[Constants.LOCAL_STORAGE.AWS_PROFILE][profileName];
-    profileService.saveProfile(profileService[Constants.LOCAL_STORAGE.AWS_PROFILE]);
-
-    profileButtonGroup.remove();
+    profileService.deleteProfile(triggerProfileId);
+    profileService.removeProfileButtonGroup(triggerProfileId);
 
     hide();
     initialize();

@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronProfile", {
     "setupProfile": async (profile) => {
-        return await ipcRenderer.invoke("profile:setupProfile", { profile });
+        return await ipcRenderer.invoke("profile:setupProfile", profile);
     },
     "setupMFAProfile": async (profile, otp) => {
         return await ipcRenderer.invoke("profile:setupMFAProfile", { profile, otp });

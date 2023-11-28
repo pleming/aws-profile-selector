@@ -1,8 +1,7 @@
 import Constants from "../common/const.js";
 import profileService from "../service/profile-service.js";
 
-let profileButton;
-let profile;
+let triggerProfileId;
 
 const initialize = () => {
     $("#otpModal .modal-body input").each((idx, elem) => {
@@ -10,15 +9,9 @@ const initialize = () => {
     });
 };
 
-const show = (eventTarget, profileName, profileData) => {
+const show = (profileId) => {
     initialize();
-
-    profileButton = eventTarget;
-
-    if (profileName && profileData) {
-        profile = { profileName, profileData };
-    }
-
+    triggerProfileId = profileId;
     $("#otpModal").modal("show");
 };
 
@@ -34,22 +27,9 @@ const confirmOTP = async () => {
         return;
     }
 
-    const response = await window.electronProfile.setupMFAProfile(profile, otp);
-
-    if (!response.status) {
-        window.electronDialog.error(response.message);
-
-        const inputOTPElem = $("input[name=inputOTP]");
-        inputOTPElem.val("");
-        inputOTPElem.focus();
-
-        profileService.releaseProfile();
+    if (!await profileService.selectMFAProfile(triggerProfileId, otp)) {
         return;
     }
-
-    window.electronDialog.info(response.message);
-
-    profileService.selectProfile(profileButton);
 
     hide();
     initialize();
