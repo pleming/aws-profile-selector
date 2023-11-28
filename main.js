@@ -77,7 +77,7 @@ app.whenReady().then(() => {
         });
 
         try {
-            writeProfile(profile.profileData);
+            writeProfile(profile);
 
             return {
                 "status": true,
@@ -104,7 +104,7 @@ app.whenReady().then(() => {
         });
 
         try {
-            await setupMFAProfile(profile.profileData, otp);
+            await setupMFAProfile(profile, otp);
 
             return {
                 "status": true,
