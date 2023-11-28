@@ -2,14 +2,16 @@ import profileModifyModal from "./modal/profile-modify-modal.js";
 import profileDeleteModal from "./modal/profile-delete-modal.js";
 import otpModal from "./modal/otp-modal.js";
 import profileService from "./service/profile-service.js";
-import loadingIndicator from "./service/loading-indicator.js";
 import Constants from "./common/const.js";
 
 const initialize = () => {
+    $("#switchOverwriteAgreement").prop("checked", false);
+    $(".profile-button-container").html("");
+
     const awsProfile = profileService[Constants.LOCAL_STORAGE.AWS_PROFILE];
 
     for (const key in awsProfile) {
-        profileService.appendProfile(key, awsProfile[key].hasOwnProperty(Constants.AWS_PROPERTY.MFA_ARN));
+        profileService.appendProfile(key);
     }
 
     $("#btnNewProfile").attr("disabled", true);
@@ -59,17 +61,15 @@ const registerEvent = () => {
                 return;
             }
 
-            loadingIndicator.loading(`Apply AWS profile : ${profileName}`);
-
             const setupProfileResponse = await window.electronProfile.setupProfile({ profileName, profileData });
 
             if (!setupProfileResponse.status) {
-                window.electronDialog.alert(setupProfileResponse.message);
+                window.electronDialog.error(setupProfileResponse.message);
                 profileService.releaseProfile();
                 return;
             }
 
-            window.electronDialog.alert(setupProfileResponse.message);
+            window.electronDialog.info(setupProfileResponse.message);
 
             profileService.selectProfile(profileButton);
         }
@@ -91,6 +91,27 @@ const registerEvent = () => {
     });
 };
 
+const listenIPCMessage = () => {
+    window.electronLoading.listenStartLoading((message) => {
+        $("#loadingIndicatorTitle").text(message.title);
+        $("#loadingIndicatorBody").text(message.body);
+        $(".loading-container").show();
+    });
+
+    window.electronLoading.listenEndLoading((message) => {
+        $("#loadingIndicatorTitle").text("");
+        $("#loadingIndicatorBody").text("");
+        $(".loading-container").hide();
+    });
+
+    window.electronProfile.listenLoadProfile((message) => {
+        profileService[Constants.LOCAL_STORAGE.AWS_PROFILE] = {};
+        profileService.saveProfile(Object.assign(profileService[Constants.LOCAL_STORAGE.AWS_PROFILE], message));
+        localStorage.removeItem(Constants.LOCAL_STORAGE.SELECTED_PROFILE);
+        initialize();
+    });
+};
+
 $(() => {
     initialize();
     profileModifyModal.initialize();
@@ -101,4 +122,6 @@ $(() => {
     profileModifyModal.registerEvent();
     profileDeleteModal.registerEvent();
     otpModal.registerEvent();
+
+    listenIPCMessage();
 });

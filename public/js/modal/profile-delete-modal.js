@@ -35,7 +35,7 @@ const deleteProfile = async () => {
     }
 
     if (profileName !== $("#inputDeleteProfileConfirmText").val()) {
-        window.electronDialog.alert("Profile name is mismatch");
+        window.electronDialog.error("Profile name is mismatch");
         return;
     }
 
