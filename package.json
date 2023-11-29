@@ -1,19 +1,71 @@
 {
   "name": "aws-profile-selector",
   "version": "1.0.0",
-  "description": "",
+  "description": "AWS Profile Selector",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dev": "cross-env NODE_ENV=dev electron .",
     "dev-backend": "cross-env NODE_ENV=dev nodemon --exec electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:osx": "electron-builder --mac",
+    "deploy:win32": "electron-builder --win portable --ia32",
+    "deploy:win64": "electron-builder --win portable --x64",
+    "deploy:linux32": "electron-builder --linux --ia32",
+    "deploy:linux64": "electron-builder --linux --x64"
   },
-  "author": "",
+  "author": {
+    "name": "Hojin Choe",
+    "email": "hojin.choe.dev@gmail.com"
+  },
+  "homepage": "https://github.com/pleming/aws-profile-selector",
   "license": "ISC",
   "devDependencies": {
     "cross-env": "^7.0.3",
     "electron": "^27.1.0",
+    "electron-builder": "^24.9.1",
     "nodemon": "^3.0.1"
+  },
+  "build": {
+    "productName": "aws-profile-selector",
+    "appId": "com.github.pleming.selector.profile.aws",
+    "asar": true,
+    "mac": {
+      "target": [
+        "default"
+      ]
+    },
+    "dmg": {
+      "title": "aws-profile-selector"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "perMachine": false,
+      "language": 1042,
+      "installerLanguages": [
+        "en_US",
+        "ko_KR"
+      ],
+      "shortcutName": "aws-profile-selector",
+      "artifactName": "aws-profile-selector-${version}.${ext}",
+      "uninstallDisplayName": "aws-profile-selector"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "tar.gz"
+      ]
+    },
+    "directories": {
+      "buildResources": ".",
+      "output": "./dist/"
+    }
   }
 }

@@ -66,6 +66,10 @@ const listenIPCMessage = () => {
 
         window.electronDialog.info(response.message);
     });
+
+    window.electronMenu.listenOpenAbout(async (message) => {
+        $("#aboutModal").modal("show");
+    });
 };
 
 $(() => {
