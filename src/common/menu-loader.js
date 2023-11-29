@@ -90,7 +90,10 @@ class MenuLoader {
                 "label": "Help",
                 "submenu": [
                     {
-                        "label": "About"
+                        "label": "About",
+                        "click": () => {
+                            this.#browserWindow.webContents.send("menu:about", {});
+                        }
                     }
                 ]
             }

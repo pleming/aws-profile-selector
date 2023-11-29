@@ -22,6 +22,14 @@ contextBridge.exposeInMainWorld("electronProfile", {
     }
 });
 
+contextBridge.exposeInMainWorld("electronMenu", {
+    "listenOpenAbout": async (callback) => {
+        ipcRenderer.on("menu:about", (event, message) => {
+            callback(message);
+        });
+    }
+});
+
 contextBridge.exposeInMainWorld("electronDialog", {
     "confirm": async (message) => {
         return await ipcRenderer.invoke("dialog:confirm", message);
